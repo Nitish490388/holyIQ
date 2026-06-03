@@ -1,1 +1,3 @@
 pnpm test
+pnpm check-types
+pnpm lint
