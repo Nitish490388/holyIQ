@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Get, UseGuards, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  UseGuards,
+  Req,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 
@@ -8,7 +16,8 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import { JwtPayload } from './types/jwt-payload.type';
+import type { JwtPayload } from './types/jwt-payload.type';
+import { CurrentUser } from './decorators/current-user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -29,21 +38,29 @@ export class AuthController {
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  getMe(@Req() req: Request & { user: unknown }) {
-    return req.user;
+  getMe(@CurrentUser() user: JwtPayload) {
+    return user;
   }
 
   @Post('refresh')
-  refresh(@Body() dto: RefreshTokenDto) {
-    const payload = this.jwtService.verify<JwtPayload>(dto.refreshToken, {
-      secret: process.env.JWT_REFRESH_SECRET,
-    });
+  async refresh(@Body() dto: RefreshTokenDto) {
+    try {
+      const payload = await this.jwtService.verifyAsync<JwtPayload>(
+        dto.refreshToken,
+        {
+          secret: process.env.JWT_REFRESH_SECRET,
+        },
+      );
 
-    return this.authService.refreshTokens(payload.sub, dto.refreshToken);
+      return this.authService.refreshTokens(payload.sub, dto.refreshToken);
+    } catch {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
   }
 
   @Post('logout')
-  logout(@Body() body: { userId: string }) {
-    return this.authService.logout(body.userId);
+  @UseGuards(JwtAuthGuard)
+  logout(@CurrentUser() user: JwtPayload) {
+    return this.authService.logout(user.sub);
   }
 }

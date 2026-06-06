@@ -35,6 +35,12 @@ export class AuthService {
         email: dto.email,
         password: hashedPassword,
       },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      },
     });
 
     return {
