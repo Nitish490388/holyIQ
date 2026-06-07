@@ -4,7 +4,6 @@ import {
   Post,
   Get,
   UseGuards,
-  Req,
   UnauthorizedException,
 } from '@nestjs/common';
 

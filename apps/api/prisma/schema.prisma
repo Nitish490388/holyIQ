@@ -15,8 +15,8 @@ datasource db {
 model User {
   id        String   @id @default(uuid())
   email     String   @unique
-  password  String
-  role      String   @default("USER")
+  password  String?
+  role      Role  @default(USER)
   refreshToken String?
   provider     AuthProvider @default(LOCAL)
   createdAt    DateTime @default(now())
@@ -45,4 +45,5 @@ model Profile {
   targetRole  String?
 
   createdAt   DateTime @default(now())
+   updatedAt   DateTime @updatedAt
 }
