@@ -11,12 +11,12 @@ import { AuthService } from './auth.service';
 
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import type { JwtPayload } from './types/jwt-payload.type';
-import { CurrentUser } from './decorators/current-user.decorator';
+import type { JwtPayload } from '../../common/types/jwt-payload.type';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
 
 @Controller('auth')
 export class AuthController {

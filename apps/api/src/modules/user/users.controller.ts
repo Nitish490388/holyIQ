@@ -2,9 +2,9 @@ import { Body, Controller, Get, Patch, UseGuards } from '@nestjs/common';
 
 import { UserService } from './users.service';
 
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import type { JwtPayload } from '../auth/types/jwt-payload.type';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import type { JwtPayload } from '../../common/types/jwt-payload.type';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 
 @Controller('users')
